@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CartItem;
 use App\Models\Order;
+use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -87,6 +88,9 @@ class OrderController extends Controller
 
             // Clear cart
             CartItem::where('user_id', Auth::id())->delete();
+
+            // Notification yuborish
+            Auth::user()->notify(new OrderStatusNotification($order, "✅ Yangi buyurtma yaratildi! Buyurtma raqami: #{$order->order_number}", 'success'));
 
             DB::commit();
 

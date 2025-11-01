@@ -16,7 +16,12 @@ class ProfileController extends Controller
     public function index()
     {
         $user = auth()->user();
-        return view('profile.index', compact('user'));
+        $orders = \App\Models\Order::where('user_id', $user->id)
+            ->with('items')
+            ->latest()
+            ->take(5)
+            ->get();
+        return view('profile.index', compact('user', 'orders'));
     }
 
     public function update(Request $request)

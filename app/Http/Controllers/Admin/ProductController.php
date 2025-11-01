@@ -39,9 +39,13 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name_uz' => 'required|string|max:255',
+            'name_ru' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'description' => 'nullable|string',
+            'description_uz' => 'nullable|string',
+            'description_ru' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|max:2048',
@@ -49,7 +53,10 @@ class ProductController extends Controller
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->name);
+        // Slug uchun O'zbekcha nom ishlatiladi
+        $data['name'] = $request->name_uz; // Backward compatibility
+        $data['description'] = $request->description_uz ?? null; // Backward compatibility
+        $data['slug'] = Str::slug($request->name_uz);
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {
@@ -86,9 +93,13 @@ class ProductController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name_uz' => 'required|string|max:255',
+            'name_ru' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'description' => 'nullable|string',
+            'description_uz' => 'nullable|string',
+            'description_ru' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|max:2048',
@@ -96,7 +107,10 @@ class ProductController extends Controller
         ]);
 
         $data = $request->all();
-        $data['slug'] = Str::slug($request->name);
+        // Slug uchun O'zbekcha nom ishlatiladi
+        $data['name'] = $request->name_uz; // Backward compatibility
+        $data['description'] = $request->description_uz ?? null; // Backward compatibility
+        $data['slug'] = Str::slug($request->name_uz);
         $data['is_active'] = $request->has('is_active');
 
         if ($request->hasFile('image')) {

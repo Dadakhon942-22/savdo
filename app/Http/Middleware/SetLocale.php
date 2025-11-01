@@ -16,11 +16,22 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = session('locale', config('app.locale'));
+        // Avval session'ni yaratishga harakat qilamiz
+        $sessionLocale = $request->session()->get('locale');
         
-        if (in_array($locale, ['uz', 'en', 'ru'])) {
-            App::setLocale($locale);
+        // Agar session'da locale bo'lmasa yoki null bo'lsa, default locale'ni o'rnatamiz
+        if (!$sessionLocale || !in_array($sessionLocale, ['uz', 'en', 'ru'])) {
+            $locale = 'uz';
+            $request->session()->put('locale', $locale);
+        } else {
+            $locale = $sessionLocale;
         }
+        
+        // Laravel locale'ni o'rnatamiz
+        App::setLocale($locale);
+        
+        // Debug uchun (keyinroq o'chirish mumkin)
+        // \Log::info('SetLocale middleware: locale set to ' . $locale);
 
         return $next($request);
     }

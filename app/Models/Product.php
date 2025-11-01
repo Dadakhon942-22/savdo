@@ -13,8 +13,14 @@ class Product extends Model
         'shop_id',
         'category_id',
         'name',
+        'name_uz',
+        'name_ru',
+        'name_en',
         'slug',
         'description',
+        'description_uz',
+        'description_ru',
+        'description_en',
         'price',
         'discount_percentage',
         'is_on_sale',
@@ -72,5 +78,23 @@ class Product extends Model
             return $this->price * $this->discount_percentage / 100;
         }
         return 0;
+    }
+
+    // Joriy tilga mos nomni qaytarish
+    public function getLocalizedNameAttribute()
+    {
+        $locale = session('locale', 'uz');
+        $field = 'name_' . $locale;
+        
+        return $this->$field ?? $this->name;
+    }
+
+    // Joriy tilga mos tavsifni qaytarish
+    public function getLocalizedDescriptionAttribute()
+    {
+        $locale = session('locale', 'uz');
+        $field = 'description_' . $locale;
+        
+        return $this->$field ?? $this->description;
     }
 }

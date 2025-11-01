@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class LocaleController extends Controller
 {
@@ -12,8 +13,11 @@ class LocaleController extends Controller
             abort(404);
         }
 
+        // Session'ga locale'ni saqlash
         session(['locale' => $locale]);
-        app()->setLocale($locale);
+        
+        // Laravel locale'ni darhol o'rnatish
+        App::setLocale($locale);
 
         return redirect()->back();
     }

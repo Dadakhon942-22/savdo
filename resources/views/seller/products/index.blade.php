@@ -3,89 +3,104 @@
 @section('title', __('messages.my_products'))
 
 @section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center mb-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
         <div>
-            <h1 class="text-3xl font-bold">{{ __('messages.my_products') }}</h1>
-            <p class="text-gray-600 mt-2">{{ __('messages.shop') }}: {{ $shop->name }}</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-2">{{ __('messages.my_products') }}</h1>
+            <p class="text-xl text-gray-700 dark:text-gray-300 font-semibold">{{ __('messages.shop') }}: {{ $shop->name }}</p>
         </div>
-        <a href="{{ route('seller.products.create') }}" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+        <a href="{{ route('seller.products.create') }}" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
             {{ __('messages.new_product') }}
         </a>
     </div>
 
     @if(session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        <div class="bg-green-100 dark:bg-green-900/40 border-2 border-green-400 dark:border-green-700 text-green-800 dark:text-green-300 px-6 py-4 rounded-xl mb-6 font-bold shadow-lg">
             {{ session('success') }}
         </div>
     @endif
 
     @if(session('error'))
-        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+        <div class="bg-red-100 dark:bg-red-900/40 border-2 border-red-400 dark:border-red-700 text-red-800 dark:text-red-300 px-6 py-4 rounded-xl mb-6 font-bold shadow-lg">
             {{ session('error') }}
         </div>
     @endif
 
-    <div class="bg-white rounded-lg shadow overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-                <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.image') }}</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.name') }}</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.category') }}</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.price') }}</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.stock') }}</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.status') }}</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.action') }}</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                @forelse($products as $product)
-                <tr>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        @if($product->image)
-                            <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}" class="h-16 w-16 object-cover rounded">
-                        @else
-                            <div class="h-16 w-16 bg-gray-200 rounded"></div>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $product->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $product->category->name }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ number_format($product->price, 0, ',', ' ') }} {{ __('messages.currency') }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">{{ $product->stock }}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        @if($product->is_active)
-                            <span class="px-2 py-1 rounded text-xs bg-green-100 text-green-800">{{ __('messages.active') }}</span>
-                        @else
-                            <span class="px-2 py-1 rounded text-xs bg-red-100 text-red-800">{{ __('messages.inactive') }}</span>
-                        @endif
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <a href="{{ route('seller.products.edit', $product) }}" class="text-blue-600 hover:text-blue-900 mr-4">{{ __('messages.edit') }}</a>
-                        <form action="{{ route('seller.products.destroy', $product) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:text-red-900" onclick="return confirm('{{ __('messages.delete_confirm') }}')">{{ __('messages.delete') }}</button>
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                        {{ __('messages.no_products') }}
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-700">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                <thead class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-700 dark:to-gray-800">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.image') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.name') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.category') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.price') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.stock') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.status') }}</th>
+                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.action') }}</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    @forelse($products as $product)
+                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($product->image)
+                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->localized_name }}" class="h-20 w-20 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                            @else
+                                <div class="h-20 w-20 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-xl flex items-center justify-center">
+                                    <svg class="w-10 h-10 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="font-extrabold text-gray-900 dark:text-white">{{ $product->localized_name }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="font-semibold text-gray-700 dark:text-gray-300">{{ $product->category->localized_name }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="font-extrabold text-gray-900 dark:text-white">{{ number_format($product->price, 0, ',', ' ') }} {{ __('messages.currency') }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="font-bold text-gray-900 dark:text-white">{{ $product->stock }}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($product->is_active)
+                                <span class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300">{{ __('messages.active') }}</span>
+                            @else
+                                <span class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300">{{ __('messages.inactive') }}</span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center space-x-3">
+                                <a href="{{ route('seller.products.edit', $product) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl font-bold transition-colors">{{ __('messages.edit') }}</a>
+                                <form action="{{ route('seller.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-bold transition-colors">{{ __('messages.delete') }}</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7" class="px-6 py-12 text-center">
+                            <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                            </svg>
+                            <p class="text-xl font-extrabold text-gray-700 dark:text-gray-300">{{ __('messages.no_products') }}</p>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-6">
         {{ $products->links() }}
     </div>
 </div>
 @endsection
-
-
-
-

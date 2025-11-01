@@ -19,27 +19,27 @@
 
                 <!-- Desktop menu -->
                 <div class="hidden md:flex items-center space-x-6">
-                    <a href="{{ route('home') }}" class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-medium {{ request()->routeIs('home') ? 'text-primary-600 dark:text-primary-400 font-bold' : '' }} transition-colors duration-200">
+                    <a href="{{ route('home') }}" class="relative text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-medium {{ request()->routeIs('home') ? 'text-primary-600 dark:text-primary-400 font-bold' : '' }} transition-all duration-200 px-3 py-2 rounded-lg {{ request()->routeIs('home') ? 'shadow-lg shadow-green-500/50 dark:shadow-green-400/50 bg-primary-50 dark:bg-primary-900/20' : 'hover:bg-gray-100 dark:hover:bg-gray-800' }}">
                         {{ __('messages.home') }}
                     </a>
-                        <a href="{{ route('categories.index') }}" class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-medium {{ request()->routeIs('categories.*') ? 'text-primary-600 dark:text-primary-400 font-bold' : '' }} transition-colors duration-200">
-                            {{ __('messages.categories') }}
-                        </a>
+                    <a href="{{ route('categories.index') }}" class="relative text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-medium {{ request()->routeIs('categories.*') ? 'text-primary-600 dark:text-primary-400 font-bold' : '' }} transition-all duration-200 px-3 py-2 rounded-lg {{ request()->routeIs('categories.*') ? 'shadow-lg shadow-green-500/50 dark:shadow-green-400/50 bg-primary-50 dark:bg-primary-900/20' : 'hover:bg-gray-100 dark:hover:bg-gray-800' }}">
+                        {{ __('messages.categories') }}
+                    </a>
                 </div>
 
                 <!-- O'ng taraf menu (Desktop) -->
                 <div class="hidden md:flex items-center space-x-2 lg:space-x-4">
                     <!-- Til tanlash -->
                     <div class="flex items-center space-x-1 border-r border-gray-200 dark:border-gray-700 pr-4">
-                        <a href="{{ route('locale.switch', 'uz') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ session('locale', 'uz') == 'uz' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">UZ</a>
-                        <a href="{{ route('locale.switch', 'en') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ session('locale') == 'en' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">EN</a>
-                        <a href="{{ route('locale.switch', 'ru') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ session('locale') == 'ru' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">RU</a>
+                        <a href="{{ route('locale.switch', 'uz') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ session('locale', 'uz') == 'uz' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md shadow-green-500/50 dark:shadow-green-400/50' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">UZ</a>
+                        <a href="{{ route('locale.switch', 'en') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ session('locale') == 'en' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md shadow-green-500/50 dark:shadow-green-400/50' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">EN</a>
+                        <a href="{{ route('locale.switch', 'ru') }}" class="px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 {{ session('locale') == 'ru' ? 'bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-md shadow-green-500/50 dark:shadow-green-400/50' : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800' }}">RU</a>
                     </div>
 
                     @auth
                         <!-- Admin panel -->
                         @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200">
+                            <a href="{{ route('admin.dashboard') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200 {{ request()->routeIs('admin.*') ? 'text-primary-600 dark:text-primary-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -49,7 +49,7 @@
 
                         <!-- Seller panel -->
                         @if(auth()->user()->isSeller())
-                            <a href="{{ route('seller.products.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:text-secondary-600 dark:hover:text-secondary-400 transition-all duration-200">
+                            <a href="{{ route('seller.products.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:text-secondary-600 dark:hover:text-secondary-400 transition-all duration-200 {{ request()->routeIs('seller.*') ? 'shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                 </svg>
@@ -57,7 +57,7 @@
                         @endif
 
                         <!-- Savat -->
-                        <a href="{{ route('cart.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-accent-50 dark:hover:bg-accent-900/20 hover:text-accent-600 dark:hover:text-accent-400 relative {{ request()->routeIs('cart.*') ? 'text-accent-600 dark:text-accent-400' : '' }} transition-all duration-200">
+                        <a href="{{ route('cart.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-accent-50 dark:hover:bg-accent-900/20 hover:text-accent-600 dark:hover:text-accent-400 relative {{ request()->routeIs('cart.*') ? 'text-accent-600 dark:text-accent-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }} transition-all duration-200">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                             </svg>
@@ -68,45 +68,104 @@
                             @endif
                         </a>
 
-                        <!-- Profile -->
+                        <!-- Notifications -->
                         <div class="relative group">
-                            <button class="flex items-center p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 {{ request()->routeIs('profile.*') ? 'text-primary-600 dark:text-primary-400' : '' }} transition-all duration-200">
+                            <button id="notification-button" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-200 relative {{ request()->routeIs('notifications.*') ? 'shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
                                 </svg>
+                                @php
+                                    $unreadCount = auth()->user()->unreadNotifications->count();
+                                @endphp
+                                @if($unreadCount > 0)
+                                    <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse">
+                                        {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                    </span>
+                                @endif
                             </button>
-                            <!-- Dropdown -->
-                            <div class="absolute right-0 mt-2 w-52 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 py-2 hidden group-hover:block z-50 transform transition-all duration-200">
-                                <a href="{{ route('profile.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 dark:hover:from-primary-900/20 dark:hover:to-secondary-900/20 transition-all duration-200 rounded-lg mx-2">
-                                    <span class="flex items-center">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                        </svg>
-                                        {{ __('messages.profile') }}
-                                    </span>
-                                </a>
-                                <a href="{{ route('orders.index') }}" class="block px-4 py-2.5 text-sm text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-accent-50 hover:to-primary-50 dark:hover:from-accent-900/20 dark:hover:to-primary-900/20 transition-all duration-200 rounded-lg mx-2">
-                                    <span class="flex items-center">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                                        </svg>
-                                        {{ __('messages.my_orders') }}
-                                    </span>
-                                </a>
-                                <hr class="my-2 border-gray-200 dark:border-gray-700">
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="block w-full text-left px-4 py-2.5 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 rounded-lg mx-2">
-                                        <span class="flex items-center">
-                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                            </svg>
-                                            {{ __('messages.logout') }}
-                                        </span>
-                                    </button>
-                                </form>
+                            <!-- Notification Dropdown -->
+                            <div id="notification-dropdown" class="absolute right-0 mt-2 w-96 bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700 hidden z-50 transform transition-all duration-200 max-h-[500px] overflow-y-auto">
+                                <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-gray-900 dark:text-white">🔔 {{ __('messages.notifications') }}</h3>
+                                    @if($unreadCount > 0)
+                                        <form action="{{ route('notifications.mark-all-read') }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="text-xs text-primary-600 dark:text-primary-400 hover:underline">
+                                                {{ __('messages.mark_all_read') }}
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                                <div id="notification-list" class="divide-y divide-gray-200 dark:divide-gray-700">
+                                    @forelse(auth()->user()->notifications->take(10) as $notification)
+                                        <div class="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors {{ $notification->read_at ? '' : 'bg-primary-50 dark:bg-primary-900/20' }}">
+                                            <div class="flex items-start justify-between">
+                                                <div class="flex-1">
+                                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                                        @if(isset($notification->data['message']))
+                                                            {{ $notification->data['message'] }}
+                                                        @else
+                                                            Yangi xabarnoma
+                                                        @endif
+                                                    </p>
+                                                    @if(isset($notification->data['order_number']))
+                                                        <p class="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                                                            Buyurtma #{{ $notification->data['order_number'] }}
+                                                        </p>
+                                                    @endif
+                                                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
+                                                        {{ $notification->created_at->diffForHumans() }}
+                                                    </p>
+                                                </div>
+                                                @if(!$notification->read_at)
+                                                    <form action="{{ route('notifications.read', $notification->id) }}" method="POST" class="ml-2">
+                                                        @csrf
+                                                        <button type="submit" class="text-primary-600 dark:text-primary-400 text-xs">
+                                                            ✓
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="p-8 text-center">
+                                            <p class="text-gray-500 dark:text-gray-400">{{ __('messages.no_notifications') }}</p>
+                                        </div>
+                                    @endforelse
+                                </div>
+                                @if(auth()->user()->notifications->count() > 10)
+                                    <div class="p-4 border-t border-gray-200 dark:border-gray-700 text-center">
+                                        <a href="{{ route('notifications.index') }}" class="text-primary-600 dark:text-primary-400 hover:underline text-sm font-semibold">
+                                            {{ __('messages.view_all') }}
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
                         </div>
+
+                        <!-- Profile -->
+                        <a href="{{ route('profile.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 {{ request()->routeIs('profile.*') ? 'text-primary-600 dark:text-primary-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }} transition-all duration-200" title="{{ __('messages.profile') }}">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </a>
+                        
+                        <!-- Orders -->
+                        <a href="{{ route('orders.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:text-secondary-600 dark:hover:text-secondary-400 {{ request()->routeIs('orders.*') ? 'text-secondary-600 dark:text-secondary-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }} transition-all duration-200" title="{{ __('messages.my_orders') }}">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                            </svg>
+                        </a>
+                        
+                        <!-- Logout -->
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-700 dark:hover:text-red-300 transition-all duration-200" title="{{ __('messages.logout') }}">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                                </svg>
+                            </button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-200 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors duration-200 text-sm lg:text-base">{{ __('messages.login') }}</a>
                         <a href="{{ route('register') }}" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-4 lg:px-6 py-2 lg:py-2.5 rounded-xl font-medium shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm lg:text-base">
@@ -140,12 +199,33 @@
             <!-- Mobile menu -->
             <div id="mobile-menu" class="hidden md:hidden pb-4 pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
                 <div class="space-y-2">
-                    <a href="{{ route('home') }}" class="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('home') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-bold' : '' }}">
+                    <a href="{{ route('home') }}" class="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 {{ request()->routeIs('home') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-bold shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }}">
                         {{ __('messages.home') }}
                     </a>
-                    <a href="{{ route('categories.index') }}" class="block px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 {{ request()->routeIs('categories.*') ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-bold' : '' }}">
-                        {{ __('messages.categories') }}
-                    </a>
+                    <div class="px-4 py-2">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-semibold">{{ __('messages.categories') }}:</p>
+                        @if(isset($navbarCategories) && $navbarCategories->count() > 0)
+                            <div class="space-y-1">
+                                @foreach($navbarCategories->take(6) as $category)
+                                    <a href="{{ route('categories.show', $category) }}" class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                                        <span class="text-sm">{{ $category->localized_name }}</span>
+                                        <span class="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-0.5 rounded-full">
+                                            {{ $category->products_count }}
+                                        </span>
+                                    </a>
+                                @endforeach
+                                @if($navbarCategories->count() > 6)
+                                    <a href="{{ route('categories.index') }}" class="block px-3 py-2 text-center text-sm font-semibold text-primary-600 dark:text-primary-400 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 mt-2">
+                                        Barchasi →
+                                    </a>
+                                @endif
+                            </div>
+                        @else
+                            <a href="{{ route('categories.index') }}" class="block px-3 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm">
+                                {{ __('messages.categories') }}
+                            </a>
+                        @endif
+                    </div>
                     
                     <!-- Til tanlash (Mobile) -->
                     <div class="px-4 py-2">
@@ -158,6 +238,21 @@
                     </div>
 
                     @auth
+                        <a href="{{ route('notifications.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+                            </svg>
+                            {{ __('messages.notifications') }}
+                            @php
+                                $unreadCount = auth()->user()->unreadNotifications->count();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <span class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                                    {{ $unreadCount > 9 ? '9+' : $unreadCount }}
+                                </span>
+                            @endif
+                        </a>
+
                         @if(auth()->user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -219,6 +314,24 @@
             const menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+
+        // Notification dropdown toggle
+        const notificationButton = document.getElementById('notification-button');
+        const notificationDropdown = document.getElementById('notification-dropdown');
+        
+        if (notificationButton && notificationDropdown) {
+            notificationButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                notificationDropdown.classList.toggle('hidden');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!notificationButton.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                    notificationDropdown.classList.add('hidden');
+                }
+            });
+        }
     </script>
 
     @if(session('success'))

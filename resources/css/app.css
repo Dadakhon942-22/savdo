@@ -16,6 +16,41 @@
     }
 }
 
+/* Grid Layout Styles - Mahsulotlar uchun */
+[data-grid-responsive] {
+    display: grid !important;
+    width: 100% !important;
+}
+
+/* Responsive grid columns */
+[data-grid-responsive] {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+}
+
+@media (min-width: 640px) {
+    [data-grid-responsive] {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (min-width: 768px) {
+    [data-grid-responsive] {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    [data-grid-responsive] {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+[data-grid-responsive] > * {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);

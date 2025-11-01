@@ -60,17 +60,27 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name_uz' => 'required|string|max:255',
+            'name_ru' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'description_uz' => 'nullable|string',
+            'description_ru' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
+            'is_on_sale' => 'boolean',
+            'discount_percentage' => 'nullable|numeric|min:0|max:99',
         ]);
 
         $validated['user_id'] = $user->id;
         $validated['shop_id'] = $shop->id;
-        $validated['slug'] = Str::slug($validated['name']);
+        $validated['name'] = $validated['name_uz']; // Backward compatibility
+        $validated['description'] = $validated['description_uz'] ?? null; // Backward compatibility
+        $validated['slug'] = Str::slug($validated['name_uz']);
+        $validated['is_on_sale'] = $request->has('is_on_sale');
+        $validated['discount_percentage'] = $request->has('is_on_sale') && $request->discount_percentage ? $request->discount_percentage : 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');
@@ -110,15 +120,25 @@ class ProductController extends Controller
 
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'name_uz' => 'required|string|max:255',
+            'name_ru' => 'required|string|max:255',
+            'name_en' => 'required|string|max:255',
+            'description_uz' => 'nullable|string',
+            'description_ru' => 'nullable|string',
+            'description_en' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
             'image' => 'nullable|image|max:2048',
             'is_active' => 'boolean',
+            'is_on_sale' => 'boolean',
+            'discount_percentage' => 'nullable|numeric|min:0|max:99',
         ]);
 
-        $validated['slug'] = Str::slug($validated['name']);
+        $validated['name'] = $validated['name_uz']; // Backward compatibility
+        $validated['description'] = $validated['description_uz'] ?? null; // Backward compatibility
+        $validated['slug'] = Str::slug($validated['name_uz']);
+        $validated['is_on_sale'] = $request->has('is_on_sale');
+        $validated['discount_percentage'] = $request->has('is_on_sale') && $request->discount_percentage ? $request->discount_percentage : 0;
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('products', 'public');

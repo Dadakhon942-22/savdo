@@ -10,7 +10,11 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Category::withCount('products')->get();
+        // Barcha kategoriyalar (navbar uchun - yangi qo'shilgan kategoriyalar ham ko'rinishi kerak)
+        $categories = Category::withCount('products')
+            ->orderBy('products_count', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('categories.index', compact('categories'));
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Notifications\OrderStatusNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -45,8 +46,29 @@ class OrderController extends Controller
             'status' => 'required|in:pending,processing,completed,cancelled',
         ]);
 
+        $oldStatus = $order->status;
         $order->update(['status' => $request->status]);
 
-        return back()->with('success', 'Order status updated');
+        // Notification yuborish
+        $statusMessages = [
+            'pending' => 'Buyurtma kutilmoqda',
+            'processing' => 'Buyurtma qayta ishlanmoqda',
+            'completed' => 'Buyurtma muvaffaqiyatli yakunlandi! 🎉',
+            'cancelled' => 'Buyurtma bekor qilindi',
+        ];
+
+        $statusTypes = [
+            'pending' => 'warning',
+            'processing' => 'info',
+            'completed' => 'success',
+            'cancelled' => 'error',
+        ];
+
+        $message = "Buyurtma holati o'zgardi: " . $statusMessages[$request->status];
+        $type = $statusTypes[$request->status] ?? 'info';
+
+        $order->user->notify(new OrderStatusNotification($order, $message, $type));
+
+        return back()->with('success', 'Buyurtma holati yangilandi va foydalanuvchiga xabar yuborildi');
     }
 }

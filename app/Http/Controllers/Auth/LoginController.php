@@ -17,17 +17,22 @@ class LoginController extends Controller
     {
         $credentials = $request->validate([
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|min:8',
+        ], [
+            'email.required' => 'Email manzilini kiriting.',
+            'email.email' => 'To\'g\'ri email manzilini kiriting.',
+            'password.required' => 'Parolni kiriting.',
+            'password.min' => 'Parol kamida 8 ta belgidan iborat bo\'lishi kerak.',
         ]);
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
-            return redirect()->intended('/');
+            return redirect()->intended('/')->with('success', 'Muvaffaqiyatli kirildi!');
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'email' => 'Email yoki parol noto\'g\'ri.',
+        ])->withInput($request->only('email'));
     }
 
     public function logout(Request $request)
