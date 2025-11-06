@@ -27,6 +27,22 @@
         
         <!-- Asosiy oyna -->
         <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 md:p-8 border-2 border-gray-200 dark:border-gray-700">
+            @if ($errors->any())
+                <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg">
+                    <ul class="text-sm text-red-600 dark:text-red-400">
+                        @foreach ($errors->all() as $error)
+                            <li class="font-bold">• {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border-2 border-red-200 dark:border-red-800 rounded-lg">
+                    <p class="text-sm font-bold text-red-600 dark:text-red-400">{{ session('error') }}</p>
+                </div>
+            @endif
+
             <form action="{{ route('seller.products.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -153,9 +169,23 @@
                         </div>
 
                         <div id="discount_section" style="display: {{ old('is_on_sale') ? 'block' : 'none' }};">
-                            <label for="discount_percentage" class="block text-base font-extrabold text-slate-900 dark:text-white mb-3">Chegirma foizi (%)</label>
-                            <input type="number" name="discount_percentage" id="discount_percentage" min="0" max="99" step="0.01" value="{{ old('discount_percentage', 0) }}" class="w-full md:w-1/2 border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 font-extrabold focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
-                            <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 font-bold">Masalan: 10, 25, 50 va h.k.</p>
+                            <div class="mb-4">
+                                <label for="discount_percentage" class="block text-base font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.discount_percentage') }} (%)</label>
+                                <input type="number" name="discount_percentage" id="discount_percentage" min="0" max="99" step="0.01" value="{{ old('discount_percentage', 0) }}" class="w-full md:w-1/2 border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 font-extrabold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('discount_percentage') border-red-500 @enderror">
+                                @error('discount_percentage')
+                                    <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
+                                @enderror
+                                <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 font-bold">{{ __('messages.discount_example') }}</p>
+                            </div>
+                            
+                            <div>
+                                <label for="sale_duration_days" class="block text-base font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.sale_duration_days') }}</label>
+                                <input type="number" name="sale_duration_days" id="sale_duration_days" value="{{ old('sale_duration_days') }}" min="1" max="365" step="1" placeholder="{{ __('messages.sale_duration_placeholder') }}" class="w-full md:w-1/2 border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 font-extrabold focus:ring-2 focus:ring-orange-500 focus:border-orange-500 @error('sale_duration_days') border-red-500 @enderror">
+                                @error('sale_duration_days')
+                                    <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
+                                @enderror
+                                <p class="text-sm text-slate-600 dark:text-slate-400 mt-2 font-bold">{{ __('messages.sale_duration_hint') }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -165,6 +195,7 @@
                         document.getElementById('discount_section').style.display = this.checked ? 'block' : 'none';
                         if (!this.checked) {
                             document.getElementById('discount_percentage').value = 0;
+                            document.getElementById('sale_duration_days').value = '';
                         }
                     });
                 </script>

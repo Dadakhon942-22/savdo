@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Savdo')</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -49,14 +50,15 @@
 
                         <!-- Seller panel -->
                         @if(auth()->user()->isSeller())
-                            <a href="{{ route('seller.products.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:text-secondary-600 dark:hover:text-secondary-400 transition-all duration-200 {{ request()->routeIs('seller.*') ? 'shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }}">
+                            <a href="{{ route('seller.dashboard') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600 dark:hover:text-green-400 transition-all duration-200 {{ request()->routeIs('seller.*') ? 'text-green-600 dark:text-green-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50 bg-green-50 dark:bg-green-900/20' : '' }}" title="{{ __('messages.my_shop') }}">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                                 </svg>
                             </a>
                         @endif
 
-                        <!-- Savat -->
+                        <!-- Savat (admin va seller emas) -->
+                        @if(!auth()->user()->isAdmin() && !auth()->user()->isSeller())
                         <a href="{{ route('cart.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-accent-50 dark:hover:bg-accent-900/20 hover:text-accent-600 dark:hover:text-accent-400 relative {{ request()->routeIs('cart.*') ? 'text-accent-600 dark:text-accent-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }} transition-all duration-200">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -67,6 +69,7 @@
                                 </span>
                             @endif
                         </a>
+                        @endif
 
                         <!-- Notifications -->
                         <div class="relative group">
@@ -143,6 +146,46 @@
                             </div>
                         </div>
 
+                        <!-- Chat (faqat customer va seller uchun, admin ham) -->
+                        <a href="{{ route('chat.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 dark:hover:text-purple-400 {{ request()->routeIs('chat.*') ? 'text-purple-600 dark:text-purple-400 shadow-lg shadow-purple-500/50 dark:shadow-purple-400/50' : '' }} transition-all duration-200 relative" title="{{ __('messages.chat') }}">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                            @php
+                                $chatUnreadCount = 0;
+                                if (auth()->check()) {
+                                    $user = auth()->user();
+                                    if ($user->isAdmin()) {
+                                        $chatUnreadCount = \App\Models\Message::where('to_user_id', $user->id)
+                                            ->whereNull('read_at')
+                                            ->whereIn('from_user_id', function($query) {
+                                                $query->select('id')
+                                                    ->from('users')
+                                                    ->whereIn('role', ['customer', 'seller']);
+                                            })
+                                            ->count();
+                                    } else {
+                                        $admin = \App\Models\User::where('role', 'admin')->first();
+                                        if ($admin) {
+                                            $chatUnreadCount = \App\Models\Message::where('from_user_id', $admin->id)
+                                                ->where('to_user_id', $user->id)
+                                                ->whereNull('read_at')
+                                                ->count();
+                                        }
+                                    }
+                                }
+                            @endphp
+                            @if($chatUnreadCount > 0)
+                                <span id="chat-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold animate-pulse">
+                                    {{ $chatUnreadCount > 9 ? '9+' : $chatUnreadCount }}
+                                </span>
+                            @else
+                                <span id="chat-unread-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">
+                                    0
+                                </span>
+                            @endif
+                        </a>
+
                         <!-- Profile -->
                         <a href="{{ route('profile.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 {{ request()->routeIs('profile.*') ? 'text-primary-600 dark:text-primary-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }} transition-all duration-200" title="{{ __('messages.profile') }}">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,12 +193,14 @@
                             </svg>
                         </a>
                         
-                        <!-- Orders -->
+                        <!-- Orders/Sales -->
+                        @if(!auth()->user()->isAdmin() && !auth()->user()->isSeller())
                         <a href="{{ route('orders.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-secondary-50 dark:hover:bg-secondary-900/20 hover:text-secondary-600 dark:hover:text-secondary-400 {{ request()->routeIs('orders.*') ? 'text-secondary-600 dark:text-secondary-400 shadow-lg shadow-green-500/50 dark:shadow-green-400/50' : '' }} transition-all duration-200" title="{{ __('messages.my_orders') }}">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                         </a>
+                        @endif
                         
                         <!-- Logout -->
                         <form method="POST" action="{{ route('logout') }}" class="inline">
@@ -177,6 +222,7 @@
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center space-x-2">
                     @auth
+                        @if(!auth()->user()->isAdmin() && !auth()->user()->isSeller())
                         <a href="{{ route('cart.index') }}" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-accent-50 dark:hover:bg-accent-900/20 relative">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -187,6 +233,7 @@
                                 </span>
                             @endif
                         </a>
+                        @endif
                     @endauth
                     <button id="mobile-menu-button" class="p-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,6 +285,25 @@
                     </div>
 
                     @auth
+                        @if(auth()->user()->isAdmin())
+                            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Admin Panel
+                            </a>
+                        @endif
+                        
+                        @if(auth()->user()->isSeller())
+                            <a href="{{ route('seller.dashboard') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-green-50 dark:hover:bg-green-900/20 hover:text-green-600 dark:hover:text-green-400">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                                {{ __('messages.my_shop') }}
+                            </a>
+                        @endif
+
                         <a href="{{ route('notifications.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
@@ -253,24 +319,45 @@
                             @endif
                         </a>
 
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                </svg>
-                                Admin Panel
-                            </a>
-                        @endif
-                        
-                        @if(auth()->user()->isSeller())
-                            <a href="{{ route('seller.products.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                                Seller Panel
-                            </a>
-                        @endif
+                        <a href="{{ route('chat.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 relative">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+                            </svg>
+                            {{ __('messages.chat') }}
+                            @php
+                                $chatUnreadCountMobile = 0;
+                                if (auth()->check()) {
+                                    $user = auth()->user();
+                                    if ($user->isAdmin()) {
+                                        $chatUnreadCountMobile = \App\Models\Message::where('to_user_id', $user->id)
+                                            ->whereNull('read_at')
+                                            ->whereIn('from_user_id', function($query) {
+                                                $query->select('id')
+                                                    ->from('users')
+                                                    ->whereIn('role', ['customer', 'seller']);
+                                            })
+                                            ->count();
+                                    } else {
+                                        $admin = \App\Models\User::where('role', 'admin')->first();
+                                        if ($admin) {
+                                            $chatUnreadCountMobile = \App\Models\Message::where('from_user_id', $admin->id)
+                                                ->where('to_user_id', $user->id)
+                                                ->whereNull('read_at')
+                                                ->count();
+                                        }
+                                    }
+                                }
+                            @endphp
+                            @if($chatUnreadCountMobile > 0)
+                                <span id="chat-unread-badge-mobile" class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold">
+                                    {{ $chatUnreadCountMobile > 9 ? '9+' : $chatUnreadCountMobile }}
+                                </span>
+                            @else
+                                <span id="chat-unread-badge-mobile" class="ml-auto bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold hidden">
+                                    0
+                                </span>
+                            @endif
+                        </a>
 
                         <a href="{{ route('profile.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -279,12 +366,14 @@
                             {{ __('messages.profile') }}
                         </a>
 
+                        @if(!auth()->user()->isAdmin() && !auth()->user()->isSeller())
                         <a href="{{ route('orders.index') }}" class="flex items-center px-4 py-2 rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                             </svg>
                             {{ __('messages.my_orders') }}
                         </a>
+                        @endif
 
                         <form method="POST" action="{{ route('logout') }}" class="px-4">
                             @csrf

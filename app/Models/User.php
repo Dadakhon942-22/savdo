@@ -88,4 +88,14 @@ class User extends Authenticatable
     {
         return $this->role === 'customer';
     }
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'from_user_id');
+    }
+
+    public function receivedMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'to_user_id');
+    }
 }

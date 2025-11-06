@@ -16,6 +16,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Seller\ProductController as SellerProductController;
+use App\Http\Controllers\Seller\SalesController as SellerSalesController;
 use Illuminate\Support\Facades\Route;
 
 // Locale switching
@@ -70,6 +71,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/notifications/{id}', [\App\Http\Controllers\NotificationController::class, 'destroy'])->name('notifications.destroy');
 });
 
+// Chat
+Route::middleware('auth')->group(function () {
+    Route::get('/chat', [\App\Http\Controllers\ChatController::class, 'index'])->name('chat.index');
+    Route::get('/chat/messages', [\App\Http\Controllers\ChatController::class, 'getMessages'])->name('chat.messages');
+    Route::post('/chat/send', [\App\Http\Controllers\ChatController::class, 'send'])->name('chat.send');
+    Route::post('/chat/mark-read', [\App\Http\Controllers\ChatController::class, 'markAsRead'])->name('chat.mark-read');
+});
+
 // Admin - faqat admin
 Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('dashboard');
@@ -97,6 +106,16 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(fun
 
 // Seller - faqat sotuvchi
 Route::prefix('seller')->middleware(['auth', 'seller'])->name('seller.')->group(function () {
+    // Dashboard
+    Route::get('/', [\App\Http\Controllers\Seller\DashboardController::class, 'index'])->name('dashboard');
+    
     // Products
     Route::resource('products', SellerProductController::class);
+    
+    // Categories
+    Route::resource('categories', \App\Http\Controllers\Seller\CategoryController::class);
+    
+    // Sales
+    Route::get('sales', [SellerSalesController::class, 'index'])->name('sales.index');
+    Route::get('sales/{order}', [SellerSalesController::class, 'show'])->name('sales.show');
 });

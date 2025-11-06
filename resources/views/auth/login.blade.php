@@ -24,8 +24,9 @@
             </div>
         @endif
 
-        <form action="{{ route('login') }}" method="POST">
+        <form action="{{ route('login') }}" method="POST" id="login-form" autocomplete="off">
             @csrf
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
             <div class="mb-4">
                 <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ __('messages.email') }}</label>
@@ -54,6 +55,33 @@
                 {{ __('messages.login') }}
             </button>
         </form>
+
+        <script>
+            // CSRF token'ni yangilash
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('login-form');
+                const metaToken = document.querySelector('meta[name="csrf-token"]');
+                
+                if (!form || !metaToken) {
+                    console.error('Login form or CSRF token not found');
+                    return;
+                }
+                
+                // Barcha _token inputlarini yangilash
+                const formTokens = form.querySelectorAll('input[name="_token"]');
+                formTokens.forEach(function(tokenInput) {
+                    tokenInput.value = metaToken.content;
+                });
+                
+                // Form submit'da token'ni yangilash
+                form.addEventListener('submit', function(e) {
+                    // Meta tag'dan yangi token olish va barcha inputlarga qo'yish
+                    formTokens.forEach(function(tokenInput) {
+                        tokenInput.value = metaToken.content;
+                    });
+                });
+            });
+        </script>
 
         <p class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
             {{ __('messages.no_account') }} <a href="{{ route('register') }}" class="text-primary-600 dark:text-primary-400 hover:underline font-semibold">{{ __('messages.register') }}</a>

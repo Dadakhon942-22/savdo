@@ -70,7 +70,14 @@
                         </div>
                     </a>
                     @auth
-                        @if($product->stock > 0)
+                        @php
+                            $canAddToCart = $product->stock > 0;
+                            if (auth()->user()->isSeller()) {
+                                $userShop = auth()->user()->shops()->first();
+                                $canAddToCart = $canAddToCart && (!$userShop || $product->shop_id != $userShop->id);
+                            }
+                        @endphp
+                        @if($canAddToCart)
                         <form action="{{ route('cart.store') }}" method="POST" class="p-4 pt-0">
                             @csrf
                             <input type="hidden" name="product_id" value="{{ $product->id }}">

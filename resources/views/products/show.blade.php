@@ -36,7 +36,7 @@
                         </div>
                     @endif
                     
-                    @if($product->is_on_sale && $product->discount_percentage > 0)
+                    @if($product->is_sale_active)
                         <div class="absolute top-4 right-4 bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 text-white px-5 py-3 rounded-2xl font-extrabold text-2xl md:text-3xl shadow-2xl transform rotate-3 border-2 border-white/30">
                             -{{ number_format($product->discount_percentage, 0) }}%
                         </div>
@@ -66,7 +66,7 @@
                     <div class="relative mb-8">
                         <div class="absolute inset-0 bg-gradient-to-br from-emerald-400 via-teal-400 to-green-400 rounded-2xl transform rotate-[-0.5deg] opacity-10 blur-sm"></div>
                         <div class="relative bg-gradient-to-br from-emerald-50 via-teal-50 to-green-50 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-green-900/30 p-6 rounded-xl border-2 border-emerald-200 dark:border-emerald-700">
-                            @if($product->is_on_sale && $product->discount_percentage > 0)
+                            @if($product->is_sale_active)
                                 <p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 line-through font-extrabold mb-2">
                                     {{ number_format($product->price, 0, ',', ' ') }} {{ __('messages.currency') }}
                                 </p>
@@ -79,6 +79,16 @@
                                     </svg>
                                     {{ number_format($product->discount_amount, 0, ',', ' ') }} {{ __('messages.currency') }} {{ __('messages.save_money') }}!
                                 </div>
+                                @if($product->remaining_sale_time)
+                                <div class="mt-3">
+                                    <p class="text-base md:text-lg font-extrabold text-red-600 dark:text-red-400 flex items-center">
+                                        <svg class="w-5 h-5 md:w-6 md:h-6 mr-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        {{ __('messages.remaining_sale_time') }} {{ $product->remaining_sale_time }}
+                                    </p>
+                                </div>
+                                @endif
                             @else
                                 <p class="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600 dark:from-emerald-400 dark:via-teal-400 dark:to-green-400 bg-clip-text text-transparent">
                                     {{ number_format($product->price, 0, ',', ' ') }} {{ __('messages.currency') }}
@@ -126,7 +136,14 @@
 
                     <!-- Savatga qo'shish formasi -->
                     @auth
-                        @if($product->stock > 0)
+                        @php
+                            $canAddToCart = $product->stock > 0;
+                            if (auth()->user()->isSeller()) {
+                                $userShop = auth()->user()->shops()->first();
+                                $canAddToCart = $canAddToCart && (!$userShop || $product->shop_id != $userShop->id);
+                            }
+                        @endphp
+                        @if($canAddToCart)
                         <div class="relative">
                             <div class="absolute inset-0 bg-gradient-to-br from-primary-400 via-secondary-400 to-accent-400 rounded-2xl transform rotate-[-0.5deg] opacity-10 blur-sm"></div>
                             <form action="{{ route('cart.store') }}" method="POST" class="relative bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 dark:from-gray-900 dark:to-gray-800 p-6 md:p-8 rounded-xl border-2 border-primary-200 dark:border-primary-700 shadow-xl">

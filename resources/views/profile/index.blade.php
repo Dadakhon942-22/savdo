@@ -31,97 +31,143 @@
         </div>
     @endif
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <!-- Shaxsiy ma'lumotlar -->
+    <!-- Bitta forma -->
+    <div class="mb-8">
         <div class="relative">
             <!-- Pastki oyna -->
             <div class="absolute inset-0 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-2xl transform rotate-[-1deg] opacity-10 blur-sm"></div>
             
             <!-- Asosiy oyna -->
             <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 md:p-8 border-2 border-gray-200 dark:border-gray-700">
-                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6">{{ __('messages.personal_info') }}</h2>
+                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6">{{ __('messages.profile') }}</h2>
                 
-                <form action="{{ route('profile.update') }}" method="POST">
+                <form action="{{ route('profile.update') }}" method="POST" class="space-y-6">
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-6">
-                        <label for="name" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.name') }}</label>
-                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-bold @error('name') border-red-500 @enderror">
-                        @error('name')
-                            <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <!-- Grid layout -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.name') }}</label>
+                            <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-bold @error('name') border-red-500 @enderror">
+                            @error('name')
+                                <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="mb-6">
-                        <label for="email" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.email') }}</label>
-                        <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-bold @error('email') border-red-500 @enderror">
-                        @error('email')
-                            <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <div>
+                            <label for="email" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.email') }}</label>
+                            <input type="email" name="email" id="email" value="{{ old('email', $user->email) }}" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 font-bold @error('email') border-red-500 @enderror">
+                            @error('email')
+                                <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <div class="mb-6">
-                        <label class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.role') }}</label>
-                        <div class="px-4 py-3 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-900 dark:to-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
-                            @if($user->isAdmin())
-                                <span class="text-purple-700 dark:text-purple-400 font-extrabold">{{ __('messages.admin_role') }}</span>
-                            @elseif($user->isSeller())
-                                <span class="text-blue-700 dark:text-blue-400 font-extrabold">{{ __('messages.seller') }}</span>
-                            @else
-                                <span class="text-green-700 dark:text-green-400 font-extrabold">{{ __('messages.customer') }}</span>
-                            @endif
+                        <div class="md:col-span-2">
+                            <label class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.role') }}</label>
+                            <div class="px-4 py-3 bg-gradient-to-r from-primary-50 to-secondary-50 dark:from-gray-900 dark:to-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
+                                @if($user->isAdmin())
+                                    <span class="text-purple-700 dark:text-purple-400 font-extrabold">{{ __('messages.admin_role') }}</span>
+                                @elseif($user->isSeller())
+                                    <span class="text-blue-700 dark:text-blue-400 font-extrabold">{{ __('messages.seller') }}</span>
+                                @else
+                                    <span class="text-green-700 dark:text-green-400 font-extrabold">{{ __('messages.customer') }}</span>
+                                @endif
+                            </div>
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-6 py-4 rounded-xl font-extrabold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                        {{ __('messages.update') }}
-                    </button>
-                </form>
-            </div>
-        </div>
+                    <!-- Divider -->
+                    <div class="border-t-2 border-gray-200 dark:border-gray-700 my-6"></div>
 
-        <!-- Parolni o'zgartirish -->
-        <div class="relative">
-            <!-- Pastki oyna -->
-            <div class="absolute inset-0 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-2xl transform rotate-[-1deg] opacity-10 blur-sm"></div>
-            
-            <!-- Asosiy oyna -->
-            <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 md:p-8 border-2 border-gray-200 dark:border-gray-700">
-                <h2 class="text-2xl font-extrabold text-slate-900 dark:text-white mb-6">{{ __('messages.change_password') }}</h2>
-                
-                <form action="{{ route('profile.password.update') }}" method="POST">
-                    @csrf
-                    @method('PUT')
+                    <!-- Password section -->
+                    <div>
+                        <h3 class="text-xl font-extrabold text-slate-900 dark:text-white mb-4">{{ __('messages.change_password') }} ({{ __('messages.optional') }})</h3>
+                        <div class="space-y-6">
+                            <div>
+                                <label for="current_password" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.current_password') }}</label>
+                                <div class="relative">
+                                    <input type="password" name="current_password" id="current_password" class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-12 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold @error('current_password') border-red-500 @enderror">
+                                    <button type="button" onclick="togglePassword('current_password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                        <svg id="current_password_eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        <svg id="current_password_eye_off" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                @error('current_password')
+                                    <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                    <div class="mb-6">
-                        <label for="current_password" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.current_password') }}</label>
-                        <input type="password" name="current_password" id="current_password" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold @error('current_password') border-red-500 @enderror">
-                        @error('current_password')
-                            <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
-                        @enderror
+                            <div>
+                                <label for="new_password" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.new_password') }}</label>
+                                <div class="relative">
+                                    <input type="password" name="new_password" id="new_password" class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-12 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold @error('new_password') border-red-500 @enderror">
+                                    <button type="button" onclick="togglePassword('new_password')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                        <svg id="new_password_eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        <svg id="new_password_eye_off" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                                @error('new_password')
+                                    <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div>
+                                <label for="new_password_confirmation" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.new_password_confirmation') }}</label>
+                                <div class="relative">
+                                    <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 pr-12 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold">
+                                    <button type="button" onclick="togglePassword('new_password_confirmation')" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+                                        <svg id="new_password_confirmation_eye" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                        </svg>
+                                        <svg id="new_password_confirmation_eye_off" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-6">
-                        <label for="new_password" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.new_password') }}</label>
-                        <input type="password" name="new_password" id="new_password" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold @error('new_password') border-red-500 @enderror">
-                        @error('new_password')
-                            <p class="text-red-600 dark:text-red-400 text-sm mt-2 font-extrabold">{{ $message }}</p>
-                        @enderror
+                    <!-- Submit button -->
+                    <div class="pt-4">
+                        <button type="submit" class="w-full bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-6 py-4 rounded-xl font-extrabold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                            {{ __('messages.update') }}
+                        </button>
                     </div>
-
-                    <div class="mb-6">
-                        <label for="new_password_confirmation" class="block text-lg font-extrabold text-slate-900 dark:text-white mb-3">{{ __('messages.new_password_confirmation') }}</label>
-                        <input type="password" name="new_password_confirmation" id="new_password_confirmation" required class="w-full border-2 border-gray-300 dark:border-gray-600 rounded-xl px-4 py-3 text-slate-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold">
-                    </div>
-
-                    <button type="submit" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white px-6 py-4 rounded-xl font-extrabold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                        {{ __('messages.change_password') }}
-                    </button>
                 </form>
             </div>
         </div>
     </div>
+
+    <script>
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            const eye = document.getElementById(id + '_eye');
+            const eyeOff = document.getElementById(id + '_eye_off');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                eye.classList.add('hidden');
+                eyeOff.classList.remove('hidden');
+            } else {
+                input.type = 'password';
+                eye.classList.remove('hidden');
+                eyeOff.classList.add('hidden');
+            }
+        }
+    </script>
 
     <!-- Statistika -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -174,7 +220,8 @@
         </div>
     </div>
 
-    <!-- Mening Buyurtmalarim -->
+    <!-- Mening Buyurtmalarim (faqat customer uchun) -->
+    @if(auth()->user()->isCustomer())
     <div class="relative mb-8">
         <!-- Pastki oyna -->
         <div class="absolute inset-0 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-3xl transform rotate-[-1deg] opacity-10 blur-md"></div>
@@ -183,7 +230,9 @@
         <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 md:p-8 border-2 border-gray-200 dark:border-gray-700">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-2">📦 {{ __('messages.my_orders') }}</h2>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-2">
+                        📦 {{ __('messages.my_orders') }}
+                    </h2>
                     <p class="text-lg text-slate-700 dark:text-slate-300 font-bold">{{ __('messages.all_orders') }}</p>
                 </div>
                 @if($orders->count() > 0)
@@ -253,5 +302,6 @@
             @endif
         </div>
     </div>
+    @endif
 </div>
 @endsection

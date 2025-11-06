@@ -1,17 +1,21 @@
 @extends('layouts.app')
 
-@section('title', __('messages.my_products'))
+@section('title', __('messages.manage_products'))
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-2">{{ __('messages.my_products') }}</h1>
-            <p class="text-xl text-gray-700 dark:text-gray-300 font-semibold">{{ __('messages.shop') }}: {{ $shop->name }}</p>
+    <!-- Header -->
+    <div class="relative mb-8 md:mb-12">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-500 via-emerald-500 to-teal-500 rounded-3xl transform rotate-[-1deg] opacity-20 blur-md"></div>
+        <div class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 border-2 border-gray-200 dark:border-gray-700">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl md:text-3xl font-extrabold text-slate-900 dark:text-white">📦 {{ __('messages.products') }}</h2>
+                <span class="text-3xl md:text-4xl font-extrabold text-green-600 dark:text-green-400">{{ $products->count() }}</span>
+            </div>
+            <a href="{{ route('seller.products.create') }}" class="block bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 text-white px-6 py-4 rounded-xl text-center font-extrabold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]">
+                {{ __('messages.new_product') }}
+            </a>
         </div>
-        <a href="{{ route('seller.products.create') }}" class="bg-gradient-to-r from-primary-600 to-secondary-600 hover:from-primary-700 hover:to-secondary-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-            {{ __('messages.new_product') }}
-        </a>
     </div>
 
     @if(session('success'))
@@ -26,81 +30,55 @@
         </div>
     @endif
 
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl overflow-hidden border-2 border-gray-200 dark:border-gray-700">
-        <div class="overflow-x-auto">
-            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                <thead class="bg-gradient-to-r from-gray-100 to-gray-50 dark:from-gray-700 dark:to-gray-800">
-                    <tr>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.image') }}</th>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.name') }}</th>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.category') }}</th>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.price') }}</th>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.stock') }}</th>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.status') }}</th>
-                        <th class="px-6 py-4 text-left text-xs font-extrabold text-gray-900 dark:text-white uppercase tracking-wider">{{ __('messages.action') }}</th>
-                    </tr>
-                </thead>
-                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                    @forelse($products as $product)
-                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($product->image)
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->localized_name }}" class="h-20 w-20 object-cover rounded-xl border-2 border-gray-200 dark:border-gray-700">
-                            @else
-                                <div class="h-20 w-20 bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-xl flex items-center justify-center">
-                                    <svg class="w-10 h-10 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                </div>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-extrabold text-gray-900 dark:text-white">{{ $product->localized_name }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-semibold text-gray-700 dark:text-gray-300">{{ $product->category->localized_name }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-extrabold text-gray-900 dark:text-white">{{ number_format($product->price, 0, ',', ' ') }} {{ __('messages.currency') }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <span class="font-bold text-gray-900 dark:text-white">{{ $product->stock }}</span>
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            @if($product->is_active)
-                                <span class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300">{{ __('messages.active') }}</span>
-                            @else
-                                <span class="px-3 py-1.5 rounded-full text-xs font-extrabold bg-red-100 dark:bg-red-900/40 text-red-800 dark:text-red-300">{{ __('messages.inactive') }}</span>
-                            @endif
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="flex items-center space-x-3">
-                                <a href="{{ route('seller.products.edit', $product) }}" class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl font-bold transition-colors">{{ __('messages.edit') }}</a>
-                                <form action="{{ route('seller.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-bold transition-colors">{{ __('messages.delete') }}</button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="px-6 py-12 text-center">
-                            <svg class="w-24 h-24 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+    <!-- Mahsulotlar ro'yxati -->
+    @if($products->count() > 0)
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-6 border-2 border-gray-200 dark:border-gray-700">
+        <div class="max-h-[600px] overflow-y-auto space-y-3 pr-2">
+            @foreach($products as $product)
+            <div class="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                <div class="flex items-center gap-3">
+                    @if($product->image)
+                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->localized_name }}" class="w-16 h-16 object-cover rounded-lg border-2 border-gray-200 dark:border-gray-600">
+                    @else
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-400 via-emerald-400 to-teal-400 rounded-lg flex items-center justify-center">
+                            <svg class="w-8 h-8 text-white opacity-80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                             </svg>
-                            <p class="text-xl font-extrabold text-gray-700 dark:text-gray-300">{{ __('messages.no_products') }}</p>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        </div>
+                    @endif
+                    <div class="flex-1 min-w-0">
+                        <h3 class="font-extrabold text-sm md:text-base text-gray-900 dark:text-white truncate">{{ $product->localized_name }}</h3>
+                        <p class="text-xs md:text-sm text-gray-600 dark:text-gray-400 font-semibold">{{ $product->category->localized_name }}</p>
+                        <p class="text-xs md:text-sm font-bold text-green-600 dark:text-green-400 mt-1">{{ number_format($product->price, 0, ',', ' ') }} {{ __('messages.currency') }}</p>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <a href="{{ route('seller.products.edit', $product) }}" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white px-2.5 py-1.5 rounded-lg font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-1 text-xs" title="{{ __('messages.edit') }}">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                        </a>
+                        <form action="{{ route('seller.products.destroy', $product) }}" method="POST" class="inline" onsubmit="return confirm('{{ __('messages.confirm_delete') }}')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-700 hover:to-rose-700 text-white px-2.5 py-1.5 rounded-lg font-bold shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 flex items-center gap-1 text-xs" title="{{ __('messages.delete') }}">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
     </div>
-
-    <div class="mt-6">
-        {{ $products->links() }}
+    @else
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl p-12 border-2 border-gray-200 dark:border-gray-700 text-center">
+        <p class="text-gray-600 dark:text-gray-400 text-lg font-semibold">{{ __('messages.no_products') }}</p>
+        <a href="{{ route('seller.products.create') }}" class="inline-block mt-4 bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 hover:from-green-700 hover:via-emerald-700 hover:to-teal-700 text-white px-6 py-3 rounded-xl font-extrabold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+            {{ __('messages.new_product') }}
+        </a>
     </div>
+    @endif
 </div>
 @endsection
